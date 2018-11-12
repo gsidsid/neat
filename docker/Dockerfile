@@ -10,4 +10,9 @@ RUN apt-get install -y build-essential
 
 RUN apt-get install -y git
 
+RUN cd opt && git clone https://github.com/gsidsid/NEAT-asteroids.git
+
+WORKDIR "/opt"
+
+RUN cat requirements.txt | xargs -n 1 pip install
 
