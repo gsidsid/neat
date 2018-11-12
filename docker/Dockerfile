@@ -10,11 +10,19 @@ RUN apt-get install -y build-essential
 
 RUN apt-get install -y git
 
-RUN cd opt && git clone https://github.com/gsidsid/NEAT-asteroids.git
+WORKDIR "/opt/"
 
-WORKDIR "/opt/NEAT-asteroids/"
+COPY ./ ./
 
 RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip install; exit 0
 
 RUN apt-get install sudo
+
+RUN sudo apt-get install alien -y
+
+RUN ./setup.sh
+
+RUN sudo apt-get install wget
+
+RUN cd setup/cfitsio && sudo ./configure && make
 

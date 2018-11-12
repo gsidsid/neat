@@ -1,0 +1,11 @@
+prefix=/home/sid/Desktop/stars/fitsio/build/temp.linux-x86_64-2.7/cfitsio3430patch
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: cfitsio
+Description: FITS File Subroutine Library
+Version: 3.43
+Libs: -L${libdir} -lcfitsio -L/usr/lib/x86_64-linux-gnu -lcurl 
+Libs.private: -lm
+Cflags: -I${includedir}

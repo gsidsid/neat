@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
-from urllib2 import Request
-import urllib2
+import urllib.request as urllib2
 import requests
 import subprocess
 import threading
@@ -31,7 +30,7 @@ def getRecordsFromVolumeData(data, _idx):
 
 def read_url(url,rL):
     url = url.replace(" ","%20")
-    req = Request(url)
+    req = urllib2.Request(url)
     a = urllib2.urlopen(req).read()
     soup = BeautifulSoup(a, 'html.parser')
     x = (soup.find_all('a'))

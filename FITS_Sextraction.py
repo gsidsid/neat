@@ -12,8 +12,8 @@ sextractor_params='sexconf'
 sextractor_output='sexout'
 processed_volume='preprocessed'
 
-sample='g19960418'
-light_id = 1
+sample='g19960516'
+light_id = 0
 
 file = processed_volume+"/"+sample+"/"+str(light_id)+".fits"
 print("Analyzing processed sample " + sample + ". Light ID is " + str(light_id)+". Running sextractor on " + file + " using parameters defined in " + sextractor_params + " folder.")

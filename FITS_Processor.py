@@ -63,8 +63,8 @@ def preprocessSampleData(idx, FITSFiles):
 def process(sample,idx):
 	preprocessSampleData(idx,findFITSFiles(sample)).to_hdu()[0]
 
-sample='g19960418'
-light_id = 1
+sample='g19960516'
+light_id = 0
 
 print("Processing sample " + sample + " #" + str(light_id) + "...")
 process(sample, light_id)
