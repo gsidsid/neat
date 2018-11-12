@@ -18,4 +18,3 @@ RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip insta
 
 RUN apt-get install sudo
 
-RUN sudo ./setup.sh
