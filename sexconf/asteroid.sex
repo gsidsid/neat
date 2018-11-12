@@ -1,0 +1,8 @@
+CATALOG_NAME	asteroid.cat
+CATALOG_TYPE	FITS_1.0
+FILTER_NAME 	asteroid.conv
+#DETECT_THRESH   2
+
+CHECKIMAGE_TYPE APERTURES
+CHECKIMAGE_NAME checkimage.fits
+PARAMETERS_NAME asteroid.param   # name of the file containing catalog contents
