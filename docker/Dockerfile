@@ -14,4 +14,8 @@ RUN cd opt && git clone https://github.com/gsidsid/NEAT-asteroids.git
 
 WORKDIR "/opt/NEAT-asteroids/"
 
-RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip install
+RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip install; exit 0
+
+RUN apt-get install sudo
+
+RUN sudo ./setup.sh
