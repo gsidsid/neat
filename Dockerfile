@@ -12,7 +12,7 @@ RUN apt-get install sudo
 
 WORKDIR "/opt/"
 
-COPY ./ ./
+RUN git clone https://github.com/gsidsid/NEAT-asteroids .
 RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip install; exit 0
 
 WORKDIR "/opt/setup"
@@ -36,4 +36,4 @@ RUN cd ccdproc && python setup.py build && python setup.py install
 
 WORKDIR "/opt/"
 RUN mkdir sexout
-
+RUN chmod u+x f.sh
