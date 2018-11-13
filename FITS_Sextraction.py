@@ -3,7 +3,6 @@ from astropy import units as u
 from astropy.wcs import WCS
 from astropy.nddata import CCDData
 import ccdproc
-from sewpy import sewpy
 import numpy as np
 import matplotlib.pyplot as plt
 import glob, os

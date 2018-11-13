@@ -57,7 +57,7 @@ def fetchRecord(record,verbose=False):
     else:
         print("Completed fetching record " + getRecordID(record))
     print("Unpacking...")
-    subprocess.call("./funpacker.sh", shell=True)
+    subprocess.call("./f.sh", shell=True)
     print("Done!")
     
 def fetchRecords(data):
