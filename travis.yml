@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - REGISTRY_USER=neatomater
+    - REGISTRY_PASS=neatomater
+
+script:
+  - docker build . -t sidworld/neat
+  - docker run sidworld/neat
+
+after_script:
+  - docker images
+
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+deploy:
+  provider: script
+  script: docker push sidworld/neat
+  on:
+    branch: master
+
