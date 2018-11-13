@@ -37,3 +37,5 @@ RUN cd ccdproc && python setup.py build && python setup.py install
 WORKDIR "/opt/"
 RUN mkdir sexout
 RUN chmod u+x f.sh
+
+ADD . .
