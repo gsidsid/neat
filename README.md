@@ -1,5 +1,5 @@
 # NEAT-asteroids 
-https://travis-ci.org/gsidsid/NEAT-asteroids.svg?branch=master
+[![Build Status](https://travis-ci.org/gsidsid/NEAT-asteroids.svg?branch=master)](https://travis-ci.org/gsidsid/NEAT-asteroids)
 
 Running Source Extractor on processed fits files from the NEAT (Near Earth Asteroid Tracking) dataset. \
 
