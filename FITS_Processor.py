@@ -78,19 +78,23 @@ def preprocessSampleData(idx, FITSFiles, longid):
     try:
         print("Attempting to build path...")
         os.makedirs(path_plan)
-        flat_corrected.write(path_plan + str(longid) + '.fits')
+        print("Built!")
+        print("Writing to file " + str(longid.split('.')[0]) + ".fits")
+        flat_corrected.write(path_plan + str(longid.split('.')[0]) + '.fits')
     except Exception as e:
-        print("Directory already exists. Writing to file " + str(longid) + ".fits")
-        flat_corrected.write(path_plan + str(longid) + '.fits')
+        print("Directory already exists. Writing to file " + str(longid.split('.')[0]) + ".fits")
+        flat_corrected.write(path_plan + str(longid.split('.')[0]) + '.fits')
     return flat_corrected
 
 
 def process(sample, idx, longid):
     preprocessSampleData(idx, findFITSFiles(sample), longid)
 
+sample = ''
 geodss = next(os.walk('geodss/data'))[1]
 
 for s in geodss:
+    sample = s
     y = [x for x in next(
             os.walk('geodss/data/' + s + '/obsdata'))[2] if x.endswith("fit")]
     for i in range(len(y)):
