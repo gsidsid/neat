@@ -22,6 +22,7 @@ processed_volume = 'preprocessed'
 
 
 def formFITSPaths(sample):
+    """Use NEAT data conventions for mapping wget output locally to locations of files."""
     paths = dict()
     paths['darks'] = geodss_data_volume + \
         '/' + sample + '/' + darks_folder_format
@@ -33,6 +34,7 @@ def formFITSPaths(sample):
 
 
 def findFITSFiles(sample):
+    """Use paths to find all .fit samples and index samples accordingly."""
     paths = formFITSPaths(sample)
     files = dict()
     files['darks'] = glob.glob(paths['darks'] + '/*.fit')
@@ -42,17 +44,22 @@ def findFITSFiles(sample):
 
 
 def primaryHDU(file):
+    """Opens the first (conventionally primary) Header Data Unit from a .fits file."""
     hdulist = fits.open(file)
     hdu = hdulist[0]
     return hdu
 
 
 def HDU2CCD(hdu):
+    """Converts HDU's into CCD objects for using the ccdproc preprocessing toolset."""
     CCD = CCDData(hdu.data[:, :], unit='adu')
     return CCD
 
 
-def preprocessSampleData(idx, FITSFiles):
+def preprocessSampleData(idx, FITSFiles, longid):
+    """Use ccdproc to subtract out dark images and use flats to correct for vignetting.
+       Write the processed file to the temporary preprocessed directory.
+    """
     sample_processed = []
     dark = HDU2CCD(primaryHDU(FITSFiles['darks'][0]))
     flat = HDU2CCD(primaryHDU(FITSFiles['flats'][0]))
@@ -69,25 +76,24 @@ def preprocessSampleData(idx, FITSFiles):
     flat_corrected = ccdproc.flat_correct(dark_subtracted, flat)
     path_plan = processed_volume + "/" + sample + "/"
     try:
+        print("Attempting to build path...")
         os.makedirs(path_plan)
-        flat_corrected.write(path_plan + str(idx) + '.fits')
+        flat_corrected.write(path_plan + str(longid) + '.fits')
     except Exception as e:
-        print(e)
-        flat_corrected.write(path_plan + str(idx) + '.fits')
+        print("Directory already exists. Writing to file " + str(longid) + ".fits")
+        flat_corrected.write(path_plan + str(longid) + '.fits')
     return flat_corrected
 
 
-def process(sample, idx):
-    preprocessSampleData(idx, findFITSFiles(sample)).to_hdu()[0]
+def process(sample, idx, longid):
+    preprocessSampleData(idx, findFITSFiles(sample), longid)
 
+geodss = next(os.walk('geodss/data'))[1]
 
-sample = 'g19960516'
-samples = next(os.walk('geodss/data'))[1]
-light_id = 0
-
-for s in samples:
-    for i in range(len([x for x in next(
-            os.walk('geodss/data/' + s + '/obsdata'))[2] if x.endswith("fit")])):
+for s in geodss:
+    y = [x for x in next(
+            os.walk('geodss/data/' + s + '/obsdata'))[2] if x.endswith("fit")]
+    for i in range(len(y)):
         print("Processing sample " + s + " #" + str(i) + "...")
-        process(s, i)
+        process(s, i, y[i])
         print("Done.")
