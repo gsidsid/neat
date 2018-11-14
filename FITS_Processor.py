@@ -57,7 +57,8 @@ def preprocessSampleData(idx, FITSFiles):
 		flat_corrected.write(path_plan+str(idx)+'.fits')
 	except Exception as e:
 		print(e)
-	return flat_corrected
+	        flat_corrected.write(path_plan+str(idx)+'.fits')
+        return flat_corrected
 
 def process(sample,idx):
 	preprocessSampleData(idx,findFITSFiles(sample)).to_hdu()[0]
