@@ -63,8 +63,11 @@ def process(sample,idx):
 	preprocessSampleData(idx,findFITSFiles(sample)).to_hdu()[0]
 
 sample='g19960516'
+samples= next(os.walk('geodss/data'))[1]
 light_id = 0
 
-print("Processing sample " + sample + " #" + str(light_id) + "...")
-process(sample, light_id)
-print("Done.")
+for s in samples:
+    for i in range(len([x for x in next(os.walk('geodss/data/'+s+'/obsdata'))[2] if x.endswith("fz")])):
+        print("Processing sample " + s + " #" + str(i) + "...")
+        process(s, i)
+        print("Done.")
