@@ -67,7 +67,7 @@ def fetchRecord(record, verbose=False):
     else:
         print("Completed fetching record " + getRecordID(record))
     print("Unpacking...")
-    subprocess.call("./f.sh", shell=True)
+    subprocess.call("sh f.sh", shell=True)
     print("Done!")
 
 
