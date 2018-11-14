@@ -13,11 +13,16 @@ NEAT_vol_2_folder = "tricam"
 NEAT_vol_3 = 'https://sbnarchive.psi.edu/pds3/neat/tricam2/data/'
 NEAT_vol_3_folder = "tricam2"
 
+
 def pullVolumeData(url, ext=''):
     page = requests.get(url).text
     soup = BeautifulSoup(page, 'html.parser')
-    links = [url + '/' + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
+    links = [
+        url +
+        '/' +
+        node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
     return links[5:-2]
+
 
 def getRecordsFromVolumeData(data, _idx):
     if isinstance(_idx, int):
@@ -28,8 +33,9 @@ def getRecordsFromVolumeData(data, _idx):
             x.append(data[i])
         return x
 
-def read_url(url,rL):
-    url = url.replace(" ","%20")
+
+def read_url(url, rL):
+    url = url.replace(" ", "%20")
     req = urllib2.Request(url)
     a = urllib2.urlopen(req).read()
     soup = BeautifulSoup(a, 'html.parser')
@@ -37,21 +43,25 @@ def read_url(url,rL):
     for i in x:
         file_name = i.extract().get_text()
         url_new = url + file_name
-        url_new = url_new.replace(" ","%20")
-        if(file_name[-1]=='/' and file_name[0]!='.'):
-            read_url(url_new,rL)
+        url_new = url_new.replace(" ", "%20")
+        if(file_name[-1] == '/' and file_name[0] != '.'):
+            read_url(url_new, rL)
         rL.append(url_new)
+
 
 def getRecordID(record):
     return record.split('/')[-2]
-        
-def fetchRecord(record,verbose=False):
+
+
+def fetchRecord(record, verbose=False):
     file_idx = 0
-    recordData=[]
-    read_url(record,recordData)
+    recordData = []
+    read_url(record, recordData)
     print("Fetching record " + getRecordID(record) + "...")
     # print("wget -r -nH -nc --cut-dirs=2 --no-parent --reject=\"index.html*\" " + str(record))
-    os.system("wget -r -nH -nc --cut-dirs=2 --no-parent --reject=\"index.html*\" " + str(record))
+    os.system(
+        "wget -r -nH -nc --cut-dirs=2 --no-parent --reject=\"index.html*\" " +
+        str(record))
     if(verbose):
         print("Completed fetching record " + getRecordID(record) + "\r")
     else:
@@ -59,12 +69,14 @@ def fetchRecord(record,verbose=False):
     print("Unpacking...")
     subprocess.call("./f.sh", shell=True)
     print("Done!")
-    
+
+
 def fetchRecords(data):
     for record in data:
-        t = threading.Thread(target=fetchRecord, args=(record,False));
-        t.start();
+        t = threading.Thread(target=fetchRecord, args=(record, False))
+        t.start()
+
 
 NEAT_vol_1_data = pullVolumeData(NEAT_vol_1)
-geodss_samples = getRecordsFromVolumeData(NEAT_vol_1_data, 10);
+geodss_samples = getRecordsFromVolumeData(NEAT_vol_1_data, 10)
 fetchRecords(geodss_samples)
