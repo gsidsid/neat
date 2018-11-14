@@ -67,7 +67,7 @@ samples= next(os.walk('geodss/data'))[1]
 light_id = 0
 
 for s in samples:
-    for i in range(len([x for x in next(os.walk('geodss/data/'+s+'/obsdata'))[2] if x.endswith("fz")])):
+    for i in range(len([x for x in next(os.walk('geodss/data/'+s+'/obsdata'))[2] if x.endswith("fit")])):
         print("Processing sample " + s + " #" + str(i) + "...")
         process(s, i)
         print("Done.")
