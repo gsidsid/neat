@@ -34,6 +34,9 @@ RUN sudo alien -i sextractor-2.19.5-1.x86_64.rpm
 RUN git clone git://github.com/astropy/ccdproc.git
 RUN cd ccdproc && python setup.py build && python setup.py install
 
+# Development tools
+RUN sudo apt-get install vim -y
+
 WORKDIR "/opt/"
 RUN mkdir sexout
 RUN chmod u+x f.sh
