@@ -1,7 +1,10 @@
 sudo: required
 services:
   - docker
-  
+
+notifications:
+  slack: nugentlab:ZRjjbU7agpY8L6jJxcCzVn2b
+
 script:
   - docker build . -t sidworld/neat
   - docker run sidworld/neat
@@ -18,6 +21,4 @@ deploy:
   on:
     branch: master
     
-notifications:
-  slack: nugentlab:ZRjjbU7agpY8L6jJxcCzVn2b
 
