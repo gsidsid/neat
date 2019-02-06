@@ -17,4 +17,7 @@ deploy:
   script: docker push sidworld/neat
   on:
     branch: master
+    
+notifications:
+  slack: nugentlab:ZRjjbU7agpY8L6jJxcCzVn2b
 
