@@ -77,6 +77,6 @@ def fetchRecords(data):
         t.start()
 
 
-NEAT_vol_1_data = pullVolumeData(NEAT_vol_1)
-geodss_samples = getRecordsFromVolumeData(NEAT_vol_1_data, 10)
-fetchRecords(geodss_samples)
+NEAT_vol_2_data = pullVolumeData(NEAT_vol_2)
+palomar = getRecordsFromVolumeData(NEAT_vol_2_data, 10)
+fetchRecords(palomar)

@@ -91,12 +91,12 @@ def process(sample, idx, longid):
     preprocessSampleData(idx, findFITSFiles(sample), longid)
 
 sample = ''
-geodss = next(os.walk('geodss/data'))[1]
+palomar = next(os.walk('tricam/data'))[1]
 
-for s in geodss:
+for s in palomar:
     sample = s
     y = [x for x in next(
-            os.walk('geodss/data/' + s + '/obsdata'))[2] if x.endswith("fit")]
+            os.walk('tricam/data/' + s + '/obsdata'))[2] if x.endswith("fit")]
     for i in range(len(y)):
         try:
             print("Processing sample " + s + " #" + str(i) + "...")

@@ -12,7 +12,7 @@ RUN apt-get install sudo
 
 WORKDIR "/opt/"
 
-RUN git clone https://github.com/gsidsid/NEAT-asteroids .
+RUN git clone https://github.com/gsidsid/neat .
 RUN cat requirements.txt | cut -f1 -d"#" | sed '/^\s*$/d' | xargs -n 1 pip install; exit 0
 
 WORKDIR "/opt/setup"
