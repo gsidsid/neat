@@ -98,6 +98,10 @@ for s in geodss:
     y = [x for x in next(
             os.walk('geodss/data/' + s + '/obsdata'))[2] if x.endswith("fit")]
     for i in range(len(y)):
-        print("Processing sample " + s + " #" + str(i) + "...")
-        process(s, i, y[i])
-        print("Done.")
+        try:
+            print("Processing sample " + s + " #" + str(i) + "...")
+            process(s, i, y[i])
+            print("Done.")
+        except Exception as e:
+            print("Error processing. Either the file already exists, or the primary HDU is corrupted/unused.")
+            pass
