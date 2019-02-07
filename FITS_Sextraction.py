@@ -27,8 +27,19 @@ print(
     sextractor_params +
     " folder.")
 
-os.system("cd " + sextractor_params + " && sex -c asteroid.sex ../" + file)
-os.system("cd " + sextractor_params + " && mv *.cat ../" + sextractor_output)
+os.system(
+    "cd " +
+    sextractor_params +
+    " && sex ../" +
+    file +
+    " -PARAMETERS_NAME sex_outcols.txt -FILTER_NAME gauss_5.0_9x9_conv.txt -STARNNW_NAME default_nnw.txt -c wisesex_params.txt -MAG_ZEROPOINT 20.5 -SATUR_LEVEL 2500 -DETECT_THRESH 2 -GAIN 1.0e+20 -WEIGHT_GAIN N,N -CATALOG_NAME " +
+    light_id +
+    "-sex-cat.txt -CHECKIMAGE_TYPE -OBJECTS,BACKGROUND -CHECKIMAGE_NAME obj.fits,bck.fits -DEBLEND_NTHRESH 32 -DEBLEND_MINCONT 0.0001 -BACK_SIZE 130")
+os.system(
+    "cd " +
+    sextractor_params +
+    " && mv *-cat.txt ../" +
+    sextractor_output)
 os.system("cd " + sextractor_params + " && mv *.fits ../" + sextractor_output)
 
 print("Finished. Catalog created at " + sextractor_output + " folder.")
