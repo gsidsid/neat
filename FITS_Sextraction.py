@@ -13,7 +13,7 @@ sextractor_output = 'sexout'
 processed_volume = 'preprocessed'
 
 sample = 'p20020109'
-light_id = 'p20020109022041d'
+light_id = '20020109022041d'
 
 file = processed_volume + "/" + sample + "/" + str(light_id) + ".fits"
 print(
