@@ -24,11 +24,11 @@ processed_volume = 'preprocessed'
 def formFITSPaths(sample):
     """Use NEAT data conventions for mapping wget output locally to locations of files."""
     paths = dict()
-    paths['darks'] = geodss_data_volume + \
+    paths['darks'] = tricam_data_volume + \
         '/' + sample + '/' + darks_folder_format
-    paths['flats'] = geodss_data_volume + \
+    paths['flats'] = tricam_data_volume + \
         '/' + sample + '/' + flats_folder_format
-    paths['lights'] = geodss_data_volume + \
+    paths['lights'] = tricam_data_volume + \
         '/' + sample + '/' + lights_folder_format
     return paths
 
@@ -68,9 +68,9 @@ def preprocessSampleData(idx, FITSFiles, longid):
     dark_subtracted = ccdproc.subtract_dark(
         lighted,
         dark,
-        dark_exposure=20 *
+        dark_exposure=60 *
         u.second,
-        data_exposure=20 *
+        data_exposure=60 *
         u.second,
         scale=True)
     flat_corrected = ccdproc.flat_correct(dark_subtracted, flat)
