@@ -39,6 +39,7 @@ RUN sudo apt-get install vim -y
 
 WORKDIR "/opt/"
 RUN mkdir sexout
+RUN mkdir gaia
 RUN chmod u+x f.sh
 
 ADD . .
