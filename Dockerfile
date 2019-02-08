@@ -42,7 +42,7 @@ RUN mkdir sexout
 RUN mkdir gaia
 RUN chmod u+x f.sh
 RUN chmod 600 f.sh
-RUN chmod u+x cat-gen.sh
-RUN chmod 600 cat-gen.sh
+RUN chmod u+x NEAT_Catgen.sh
+RUN chmod 600 NEAT_Catgen.sh
 
 ADD . .
