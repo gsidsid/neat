@@ -12,11 +12,18 @@ sextractor_params = 'sexconf'
 sextractor_output = 'sexout'
 processed_volume = 'preprocessed'
 
-sample = 'p20020109'
+sample = ''
 light_id = '20020109022041d'
 
-file = processed_volume + "/" + sample + "/" + str(light_id) + ".fits"
-print(
+
+palomar = next(os.walk('preprocessed'))[1]
+
+for s in palomar:
+    sample = s
+    y = [x for x in next(os.walk('preprocessed/' + sample))[2]]
+    for light_id in y:
+        file = processed_volume + "/" + sample + "/" + str(light_id) + ".fits"
+        print(
     "Analyzing processed sample " +
     sample +
     ". Light ID is " +
@@ -27,14 +34,15 @@ print(
     sextractor_params +
     " folder.")
 
-os.system(
+        os.system(
     "cd " +
     sextractor_params +
     " && sex ../" +
     file +
     " -PARAMETERS_NAME sex_outcols.txt -FILTER_NAME gauss_5.0_9x9_conv.txt -STARNNW_NAME default_nnw.txt -c wisesex_params.txt -MAG_ZEROPOINT 20.5 -SATUR_LEVEL 2500 -DETECT_THRESH 2 -GAIN 1.0e+20 -WEIGHT_GAIN N,N -CATALOG_NAME " +
-    sample + '-' + light_id +
+    sample + '-' + light_id[:-5] +
     "-sex-cat.txt -CHECKIMAGE_TYPE -OBJECTS,BACKGROUND -CHECKIMAGE_NAME obj.fits,bck.fits -DEBLEND_NTHRESH 32 -DEBLEND_MINCONT 0.0001 -BACK_SIZE 130")
+
 os.system(
     "cd " +
     sextractor_params +
