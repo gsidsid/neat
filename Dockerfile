@@ -36,10 +36,13 @@ RUN cd ccdproc && python setup.py build && python setup.py install
 
 # Development tools
 RUN sudo apt-get install vim -y
-
 WORKDIR "/opt/"
 RUN mkdir sexout
+
+# GAIA Star catalog
 RUN mkdir gaia
+
+# Script Permissions (broken)
 RUN chmod u+x f.sh
 RUN chmod 600 f.sh
 RUN chmod u+x NEAT_Catgen.sh
