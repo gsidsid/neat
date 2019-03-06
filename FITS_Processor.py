@@ -40,6 +40,9 @@ def findFITSFiles(sample):
     files['darks'] = glob.glob(paths['darks'] + '/*.fit')
     files['flats'] = glob.glob(paths['flats'] + '/*.fit')
     files['lights'] = glob.glob(paths['lights'] + '/*.fit')
+    files['darks_lbl'] = glob.glob(paths['darks'] + '/*.lbl')
+    files['flats_lbl'] = glob.glob(paths['flats'] + '/*.lbl')
+    files['lights_lbl'] = glob.glob(paths['lights'] + '/*.lbl')
     return files
 
 
