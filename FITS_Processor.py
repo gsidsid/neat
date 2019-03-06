@@ -68,7 +68,8 @@ def preprocessSampleData(idx, FITSFiles, longid):
     dark = HDU2CCD(primaryHDU(FITSFiles['darks'][0]))
     flat = HDU2CCD(primaryHDU(FITSFiles['flats'][0]))
     lights = FITSFiles['lights']
-    lighted = HDU2CCD(primaryHDU(lights[idx]))
+    #lighted = HDU2CCD(primaryHDU(lights[idx]))
+    lighted = CCDData.read(lights[idx], unit='adu')
     dark_subtracted = ccdproc.subtract_dark(
         lighted,
         dark,
