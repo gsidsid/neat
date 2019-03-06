@@ -2,6 +2,7 @@ from astropy.io import fits
 from astropy import units as u
 from astropy.wcs import WCS
 from astropy.nddata import CCDData
+from lblparser import lbl_parse
 import ccdproc
 import numpy as np
 import matplotlib.pyplot as plt

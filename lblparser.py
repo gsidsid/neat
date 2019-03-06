@@ -45,7 +45,6 @@ def lbl_parse(file, link=False):
 
     i = 0
     while(True):
-        print(len(l[i]))
         if len(l[i]) == 1:
             # If length of list elem. is 1, check if it's the end
             if l[i][0] == 'END':
