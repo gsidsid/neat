@@ -47,38 +47,18 @@ def findFITSFiles(sample):
     return files
 
 
-def primaryHDU(file):
-    """Opens the first (conventionally primary) Header Data Unit from a .fits file."""
-    hdulist = fits.open(file)
-    hdu = hdulist[0]
-    return hdu
-
-
-def HDU2CCD(hdu):
-    """Converts HDU's into CCD objects for using the ccdproc preprocessing toolset."""
-    CCD = CCDData(hdu.data[:, :], unit='adu')
-    return CCD
-
-
 def preprocessSampleData(idx, FITSFiles, longid):
     """Use ccdproc to subtract out dark images and use flats to correct for vignetting.
        Write the processed file to the temporary preprocessed directory.
     """
-    sample_processed = []
-    dark = HDU2CCD(primaryHDU(FITSFiles['darks'][0]))
-    flat = HDU2CCD(primaryHDU(FITSFiles['flats'][0]))
     lights = FITSFiles['lights']
-    #lighted = HDU2CCD(primaryHDU(lights[idx]))
+    dark = CCDData.read(FITSFiles['darks'][0], unit='adu')
+    flat = CCDData.read(FITSFiles['flats'][0], unit='adu')
     lighted = CCDData.read(lights[idx], unit='adu')
-    dark_subtracted = ccdproc.subtract_dark(
-        lighted,
-        dark,
-        dark_exposure=60 *
-        u.second,
-        data_exposure=60 *
-        u.second,
-        scale=True)
-    flat_corrected = ccdproc.flat_correct(dark_subtracted, flat)
+    corr = flat.data - dark.data
+    corr1 = lighted.data - dark.data
+    lighted.data = corr1/flat.data
+    flat_corrected = lighted
     path_plan = processed_volume + "/" + sample + "/"
     try:
         print("Attempting to build path...")
