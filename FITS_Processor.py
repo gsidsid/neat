@@ -48,10 +48,13 @@ def findFITSFiles(sample):
 
 
 def preprocessSampleData(idx, FITSFiles, longid):
-    """Use ccdproc to subtract out dark images and use flats to correct for vignetting.
+    """Use provided correction methods to subtract out dark images and use flats to correct for vignetting.
        Write the processed file to the temporary preprocessed directory.
     """
     lights = FITSFiles['lights']
+    lights_lbl = lbl_parse(FITSFiles['lights_lbl'][idx])
+    darks_lbl = lbl_parse(FITSFiles['darks_lbl'][0])
+    flats_lbl = lbl_parse(FITSFiles['flats_lbl'][0])
     dark = CCDData.read(FITSFiles['darks'][0], unit='adu')
     flat = CCDData.read(FITSFiles['flats'][0], unit='adu')
     lighted = CCDData.read(lights[idx], unit='adu')
