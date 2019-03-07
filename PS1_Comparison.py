@@ -217,7 +217,7 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     res = ps1cone(ra,dec,radius)
     if len(res) > 0:
         print(ascii.read(res))
-
+        print(ascii.read("sexout/"+catalog))
 
 
 
