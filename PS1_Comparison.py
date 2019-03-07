@@ -211,9 +211,8 @@ def getConeParams(lbl_filepath):
 
 search_dict = dict()
 sconstraints = {'primaryDetection':1}
-scolumns = """objID,raMean,decMean,nDetections,ng,nr,ni,nz,ny,
-    nStackDetections,primaryDetection,
-    gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag""".split(',')
+scolumns = """objID,raMean,decMean,gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag,
+    nDetections,ng,nr,ni,nz,ny,nStackDetections,primaryDetection""".split(',')
 scolumns = [x.strip() for x in scolumns]
 scolumns = [x for x in scolumns if x and not x.startswith('#')]
 
@@ -223,9 +222,12 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     ra, dec, radius = getConeParams(search_dict[catalog])
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
     if len(res) > 0:
-        print(ascii.read(res))
-        print(ascii.read("sexout/"+catalog))
-
+        res_tab = ascii.read(res)
+        res_tab.sort('gPSFMag')
+        cat_tab = ascii.read("sexout/"+catalog)
+        cat_tab.sort('MAG_AUTO')
+        print(res_tab)
+        print(cat_tab)
 
 
 
