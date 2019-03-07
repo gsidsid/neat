@@ -14,6 +14,8 @@ flats_folder_format = 'flats'
 darks_folder_format = 'darks'
 lights_folder_format = 'obsdata'
 
+FMT = '%H:%M:%S'
+
 geodss_data_volume = 'geodss/data'
 tricam_data_volume = 'tricam/data'
 tricam2_data_volume = 'tricam2/data'
@@ -53,13 +55,13 @@ def odf_mapper(FITSFiles, light_idx):
     lab = lbl_parse(FITSFiles['lights'][light_idx][:-3]+"lbl")
     ttd = lab["START_TIME"].partition('T')
     best_didx = 0
-    best fidx = 0
-    min_t_d_delta = 999999999
-    min_t_f_delta = 999999999
+    best_fidx = 0
+    min_t_d_delta = 99999999
+    min_t_f_delta = 99999999
     for didx in range(len(FITSFiles['darks'])):
         dta = lbl_parse(FITSFiles['darks'][didx][:-3]+"lbl")
         ttd_dta = dta["STOP_TIME"].partition('T')
-        if (ttd_dta[0] == ttd[0]):
+        if ttd_dta[0] == ttd[0]:
             tdelta = abs((datetime.strptime(ttd_dta[2], FMT) - datetime.strptime(ttd[2], FMT)).total_seconds())
             if tdelta < min_t_d_delta:
                 min_t_d_delta = tdelta
