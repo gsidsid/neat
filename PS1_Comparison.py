@@ -212,7 +212,7 @@ def getConeParams(lbl_filepath):
 def parseConeQuery(result):
     if len(result) > 0:
         res_tab = ascii.read(result)
-        res_tab.sort('gPSFMag')
+        res_tab.sort('rPSFMag')
         for filter in 'grizy':
             col = filter+'PSFMag'
             try:
