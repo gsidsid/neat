@@ -206,7 +206,7 @@ def getConeParams(lbl_filepath, catalog_filepath):
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = hor_fov_arcsec / 3600.00
+    radius = hor_fov_arcsec * 4.0 / 3600.00
     return (world_ra, world_dec, radius)
 
 search_dict = dict()
@@ -214,7 +214,8 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     sample_dir = catalog.partition("-")
     search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
-    print(ps1cone(ra,dec,radius))
+    res = ps1cone(ra,dec,radius)
+    print(res)
 
 
 
