@@ -209,6 +209,19 @@ def getConeParams(lbl_filepath):
     radius = 50.0 / 3600.00
     return (world_ra, world_dec, radius)
 
+def parseConeQuery(result):
+    if len(result) > 0:
+        res_tab = ascii.read(result)
+        res_tab.sort('gPSFMag')
+        for filter in 'grizy':
+            col = filter+'PSFMag'
+            try:
+                res_tab[col].format = ".4f"
+                res_tab[col][res_tab[col] == -999.0] = np.nan
+            except KeyError:
+                print("{} not found".format(col))
+    return res_tab
+
 search_dict = dict()
 sconstraints = {'primaryDetection':1}
 scolumns = """objID,raMean,decMean,gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag,
@@ -221,11 +234,9 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
-    if len(res) > 0:
-        res_tab = ascii.read(res)
-        res_tab.sort('gPSFMag')
+        res_tab = parseConeQuery(res)
         cat_tab = ascii.read("sexout/"+catalog)
-        cat_tab.sort('MAG_AUTO')
+        cat_tab.sort('MAG_PSF')
         print(res_tab)
         print(cat_tab)
 
