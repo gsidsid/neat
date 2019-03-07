@@ -234,11 +234,11 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
-        res_tab = parseConeQuery(res)
-        cat_tab = ascii.read("sexout/"+catalog)
-        cat_tab.sort('MAG_AUTO')
-        print(res_tab)
-        print(cat_tab)
+    res_tab = parseConeQuery(res)
+    cat_tab = ascii.read("sexout/"+catalog)
+    cat_tab.sort('MAG_AUTO')
+    print(res_tab)
+    print(cat_tab)
 
 
 
