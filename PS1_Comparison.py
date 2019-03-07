@@ -8,7 +8,7 @@ import json
 import requests
 
 from urllib.parse import quote as urlencode
-from urllib.request import urllretrieve
+from urllib.request import urlretrieve
 
 import http.client as httplib
 
