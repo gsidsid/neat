@@ -2,6 +2,7 @@ from astropy.io import ascii
 from astropy.table import Table
 
 import sys
+import os
 import re
 import numpy as np
 import json
@@ -198,3 +199,14 @@ def resolve(name):
     except IndexError as e:
         raise ValueError("Unknown object '{}'".format(name))
     return (objRa, objDec)
+
+search_lbls = []
+for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
+    search_lbls.append(catalog.partition("-")[2].partition(".")[0].partition("-")[0] + ".lbl")
+print(search_lbls)
+
+
+
+
+
+
