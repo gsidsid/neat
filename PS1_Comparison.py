@@ -236,7 +236,7 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
         res_tab = parseConeQuery(res)
         cat_tab = ascii.read("sexout/"+catalog)
-        cat_tab.sort('MAG_PSF')
+        cat_tab.sort('MAG_AUTO')
         print(res_tab)
         print(cat_tab)
 
