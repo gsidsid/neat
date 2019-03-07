@@ -201,20 +201,27 @@ def resolve(name):
         raise ValueError("Unknown object '{}'".format(name))
     return (objRa, objDec)
 
-def getConeParams(lbl_filepath, catalog_filepath):
+def getConeParams(lbl_filepath):
     lab = lbl_parse(lbl_filepath)
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = hor_fov_arcsec * 4.0 / 3600.00
+    radius = 50.0 / 3600.00
     return (world_ra, world_dec, radius)
 
 search_dict = dict()
+sconstraints = {'primaryDetection':1}
+scolumns = """objID,raMean,decMean,nDetections,ng,nr,ni,nz,ny,
+    nStackDetections,primaryDetection,
+    gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag""".split(',')
+scolumns = [x.strip() for x in scolumns]
+scolumns = [x for x in scolumns if x and not x.startswith('#')]
+
 for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     sample_dir = catalog.partition("-")
     search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
-    res = ps1cone(ra,dec,radius)
+    res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
     if len(res) > 0:
         print(ascii.read(res))
         print(ascii.read("sexout/"+catalog))
