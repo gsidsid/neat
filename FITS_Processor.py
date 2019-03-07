@@ -3,6 +3,7 @@ from astropy import units as u
 from astropy.wcs import WCS
 from astropy.nddata import CCDData
 from lblparser import lbl_parse
+from datetime import datetime
 import ccdproc
 import numpy as np
 import matplotlib.pyplot as plt
@@ -47,21 +48,50 @@ def findFITSFiles(sample):
     return files
 
 
-def preprocessSampleData(idx, FITSFiles, longid):
+def odf_mapper(FITSFiles, light_idx):
+    """Transforms light index into closest dark and flat indexes"""
+    lab = lbl_parse(FITSFiles['lights'][light_idx][:-3]+"lbl")
+    ttd = lab["START_TIME"].partition('T')
+    best_didx = 0
+    best fidx = 0
+    min_t_d_delta = 999999999
+    min_t_f_delta = 999999999
+    for didx in range(len(FITSFiles['darks'])):
+        dta = lbl_parse(FITSFiles['darks'][didx][:-3]+"lbl")
+        ttd_dta = dta["STOP_TIME"].partition('T')
+        if (ttd_dta[0] == ttd[0]):
+            tdelta = abs((datetime.strptime(ttd_dta[2], FMT) - datetime.strptime(ttd[2], FMT)).total_seconds())
+            if tdelta < min_t_d_delta:
+                min_t_d_delta = tdelta
+                best_didx = didx
+    for fidx in range(len(FITSFiles['flats'])):
+        fta = lbl_parse(FITSFiles['flats'][fidx][:-3]+"lbl")
+        ttf_fta = fta["STOP_TIME"].partition('T')
+        if (ttf_fta[0] == ttd[0]):
+            tdelta = abs((datetime.strptime(ttf_fta[2], FMT) - datetime.strptime(ttd[2], FMT)).total_seconds())
+            if tdelta < min_t_f_delta:
+                min_t_f_delta = tdelta
+                best_fidx = fidx
+    return (best_didx,best_fidx,min_t_d_delta,min_t_f_delta)
+
+def preprocessSampleData(light_idx, FITSFiles, longid):
     """Use provided correction methods to subtract out dark images and use flats to correct for vignetting.
        Write the processed file to the temporary preprocessed directory.
     """
-    lights = FITSFiles['lights']
-    lights_lbl = lbl_parse(FITSFiles['lights_lbl'][idx])
-    darks_lbl = lbl_parse(FITSFiles['darks_lbl'][0])
-    flats_lbl = lbl_parse(FITSFiles['flats_lbl'][0])
-    dark = CCDData.read(FITSFiles['darks'][0], unit='adu')
-    flat = CCDData.read(FITSFiles['flats'][0], unit='adu')
-    lighted = CCDData.read(lights[idx], unit='adu')
+    dark_idx, flat_idx, ttd, ttf = odf_mapper(FITSFiles, light_idx)
+    print(ttd, ttf)
+
+    lights_lbl = lbl_parse(FITSFiles['lights_lbl'][light_idx])
+
+    light = CCDData.read(FITSFiles['lights'][light_idx], unit='adu')
+    dark = CCDData.read(FITSFiles['darks'][dark_idx], unit='adu')
+    flat = CCDData.read(FITSFiles['flats'][flat_idx], unit='adu')
+    
     corr = flat.data - dark.data
-    corr1 = lighted.data - dark.data
-    lighted.data = corr1/flat.data
-    flat_corrected = lighted
+    corr1 = light.data - dark.data
+    light.data = corr1/flat.data
+    flat_corrected = light
+
     path_plan = processed_volume + "/" + sample + "/"
     try:
         print("Attempting to build path...")
