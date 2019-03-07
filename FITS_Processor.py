@@ -54,10 +54,12 @@ def odf_mapper(FITSFiles, light_idx):
     """Transforms light index into closest dark and flat indexes"""
     lab = lbl_parse(FITSFiles['lights'][light_idx][:-3]+"lbl")
     ttd = lab["START_TIME"].partition('T')
+
     best_didx = 0
     best_fidx = 0
     min_t_d_delta = 99999999
     min_t_f_delta = 99999999
+    
     for didx in range(len(FITSFiles['darks'])):
         dta = lbl_parse(FITSFiles['darks'][didx][:-3]+"lbl")
         ttd_dta = dta["STOP_TIME"].partition('T')
@@ -66,6 +68,7 @@ def odf_mapper(FITSFiles, light_idx):
             if tdelta < min_t_d_delta:
                 min_t_d_delta = tdelta
                 best_didx = didx
+    
     for fidx in range(len(FITSFiles['flats'])):
         fta = lbl_parse(FITSFiles['flats'][fidx][:-3]+"lbl")
         ttf_fta = fta["STOP_TIME"].partition('T')
@@ -74,7 +77,20 @@ def odf_mapper(FITSFiles, light_idx):
             if tdelta < min_t_f_delta:
                 min_t_f_delta = tdelta
                 best_fidx = fidx
-    return (best_didx,best_fidx,min_t_d_delta,min_t_f_delta)
+    
+    light_lbl = lbl_parse(FITSFiles['lights'][light_idx][:-3]+"lbl")
+    dark_lbl = lbl_parse(FITSFiles['darks'][best_didx][:-3]+"lbl")
+    flat_lbl = lbl_parse(FITSFiles['flats'][best_fidx][:-3]+"lbl")
+
+    if (flat_lbl['TARGET_NAME'] == '"FLAT FIELD"' and
+            dark_lbl['TARGET_NAME'] == '"DARK"' and
+            float(flat_lbl['EXPOSURE_DURATION'].partition('<')[0]) == float(dark_lbl['EXPOSURE_DURATION'].partition('<')[0]) and
+            light_lbl['TARGET_NAME'] == '"ASTEROID"' and
+            light_lbl['FILTER_NAME'] == '"NONE"' and
+            float(light_lbl['EXPOSURE_DURATION'].partition('<')[0]) == float(dark_lbl['EXPOSURE_DURATION'].partition('<')[0])):
+        return (best_didx,best_fidx,min_t_d_delta,min_t_f_delta)
+    else:
+        return (-1, -1, 0, 0)
 
 def preprocessSampleData(light_idx, FITSFiles, longid):
     """Use provided correction methods to subtract out dark images and use flats to correct for vignetting.
@@ -82,6 +98,10 @@ def preprocessSampleData(light_idx, FITSFiles, longid):
     """
     dark_idx, flat_idx, ttd, ttf = odf_mapper(FITSFiles, light_idx)
     print(ttd, ttf)
+
+    if dark_idx < 0 and flat_idx < 0:
+        print("NON-COMPLIANT")
+        return;
 
     lights_lbl = lbl_parse(FITSFiles['lights_lbl'][light_idx])
 
