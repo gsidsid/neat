@@ -206,7 +206,7 @@ def getConeParams(lbl_filepath):
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = 500 / 3600.00
+    radius = 1010 / 3600.00
     return (world_ra, world_dec, radius)
 
 def parseConeQuery(result):
@@ -223,7 +223,7 @@ def parseConeQuery(result):
     return res_tab
 
 search_dict = dict()
-sconstraints = {'primaryDetection':1,'rPSFMag.min':5, 'rPSFMag.max':20}
+sconstraints = {'primaryDetection':1,'rPSFMag.min':5, 'rPSFMag.max':21}
 scolumns = """objID,raMean,decMean,gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag,
     nDetections,ng,nr,ni,nz,ny,nStackDetections,primaryDetection""".split(',')
 scolumns = [x.strip() for x in scolumns]
