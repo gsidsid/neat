@@ -111,7 +111,7 @@ def preprocessSampleData(light_idx, FITSFiles, longid):
     
     corr = flat.data - dark.data
     corr1 = light.data - dark.data
-    light.data = corr1/flat.data
+    light.data = corr1/corr
     flat_corrected = light
 
     path_plan = processed_volume + "/" + sample + "/"
