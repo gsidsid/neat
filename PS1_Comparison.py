@@ -7,6 +7,7 @@ import re
 import numpy as np
 import json
 import requests
+import math
 
 from lblparser import lbl_parse
 from urllib.parse import quote as urlencode
@@ -206,7 +207,7 @@ def getConeParams(lbl_filepath):
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = 1010 / 3600.00
+    radius = 0.2
     return (world_ra, world_dec, radius)
 
 def parseConeQuery(result):
@@ -222,8 +223,18 @@ def parseConeQuery(result):
                 print("{} not found".format(col))
     return res_tab
 
+def starMatcher(ps1_catalog, se_catalog, error_pos, error_mag):
+    ps1_ra_dec_list = list(zip(list(ps1_catalog['raMean']), list(ps1_catalog['decMean'])))
+    se_ra_dec_list = list(zip(list(se_catalog['ALPHAWIN_J2000']), list(se_catalog['DELTAWIN_J2000'])))
+    idx = 0
+    for coord in se_ra_dec_list:
+        nearest_ps1 = min(ps1_ra_dec_list, key=lambda c: math.hypot(c[0] - coord[0], c[1] - coord[1]));
+        if math.hypot(nearest_ps1[0]-coord[0], nearest_ps1[1]-coord[1]) < error_pos:
+            print("MATCH SE-PS1 DETECT AT: " + str(nearest_ps1))
+            print("SE DETECT MAG: " + str(list(se_catalog['MAG_AUTO'])[idx]))
+        idx += 1
+
 search_dict = dict()
-sconstraints = {'primaryDetection':1,'rPSFMag.min':5, 'rPSFMag.max':21}
 scolumns = """objID,raMean,decMean,gPSFMag,rPSFMag,iPSFMag,zPSFMag,yPSFMag,
     nDetections,ng,nr,ni,nz,ny,nStackDetections,primaryDetection""".split(',')
 scolumns = [x.strip() for x in scolumns]
@@ -233,12 +244,14 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     sample_dir = catalog.partition("-")
     search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
+    print("RA: " + str(ra) + ", DEC:" + str(dec))
+    cat_tab = ascii.read("sexout/"+catalog)
+    cat_tab.sort("MAG_AUTO");
+    top_5p = float(np.percentile(cat_tab["MAG_AUTO"], 5))
+    sconstraints = {'primaryDetection':1,'rPSFMag.min':10, 'rPSFMag.max':25}
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
     res_tab = parseConeQuery(res)
-    cat_tab = ascii.read("sexout/"+catalog)
-    cat_tab.sort('MAG_AUTO')
-    print(res_tab)
-    print(cat_tab)
+    starMatcher(res_tab, cat_tab, 0.001, 1)
 
 
 
