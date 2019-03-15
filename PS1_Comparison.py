@@ -207,15 +207,15 @@ def getConeParams(lbl_filepath):
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = 0.18
+    radius = 0.15
     return (world_ra, world_dec, radius)
 
 def parseConeQuery(result):
     if len(result) > 0:
         res_tab = ascii.read(result)
-        res_tab.sort('rApMag')
+        res_tab.sort('rMeanApMag')
         for filter in 'gr':
-            col = filter+'ApMag'
+            col = filter+'MeanApMag'
             try:
                 res_tab[col].format = ".4f"
                 res_tab[col][res_tab[col] == -999.0] = np.nan
@@ -239,7 +239,7 @@ def starMatcher(ps1_catalog, se_catalog, error_pos, error_mag):
     return near_list, se_mags
 
 search_dict = dict()
-scolumns = """raMean,decMean,gApMag,rApMag""".split(',')
+scolumns = """raMean,decMean,gMeanApMag,rMeanApMag""".split(',')
 scolumns = [x.strip() for x in scolumns]
 scolumns = [x for x in scolumns if x and not x.startswith('#')]
 
@@ -251,14 +251,14 @@ for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     cat_tab = ascii.read("sexout/"+catalog)
     cat_tab.sort("MAG_AUTO");
     #top_5p = float(np.percentile(cat_tab["MAG_AUTO"], 5))
-    sconstraints = {'primaryDetection':1,'rApMag.min':15, 'rApMag.max':22}
-    res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
+    sconstraints = {'primaryDetection':1,'rMeanApMag.min':15, 'rMeanApMag.max':22}
+    res = ps1cone(ra,dec,radius, table="mean", release="dr2", columns=scolumns, verbose=True, **sconstraints)
     res_tab = parseConeQuery(res)
     nl,semg = starMatcher(res_tab, cat_tab, 0.003, 1)
     valid_errs = []
     for i in range(len(nl)):
         speci = list(res_tab['raMean']).index(nl[i][0])
-        rmag = float(res_tab['rPSFMag'][speci])
+        rmag = float(res_tab['rMeanApMag'][speci])
         ourmag = float(semg[i])
         err = rmag - ourmag
         if rmag > 16 and abs(err) < 40:
