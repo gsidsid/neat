@@ -207,15 +207,15 @@ def getConeParams(lbl_filepath):
     world_ra = float(lab['RIGHT_ASCENSION'].partition('<')[0])
     world_dec = float(lab['DECLINATION'].partition('<')[0])
     hor_fov_arcsec = float(lab['HORIZONTAL_PIXEL_FOV'].partition('<')[0])
-    radius = 0.2
+    radius = 0.18
     return (world_ra, world_dec, radius)
 
 def parseConeQuery(result):
     if len(result) > 0:
         res_tab = ascii.read(result)
-        res_tab.sort('rPSFMag')
+        res_tab.sort('rApMag')
         for filter in 'gr':
-            col = filter+'PSFMag'
+            col = filter+'ApMag'
             try:
                 res_tab[col].format = ".4f"
                 res_tab[col][res_tab[col] == -999.0] = np.nan
@@ -239,21 +239,19 @@ def starMatcher(ps1_catalog, se_catalog, error_pos, error_mag):
     return near_list, se_mags
 
 search_dict = dict()
-scolumns = """raMean,decMean,gPSFMag,rPSFMag,
-    nDetections,nStackDetections,primaryDetection""".split(',')
+scolumns = """raMean,decMean,gApMag,rApMag""".split(',')
 scolumns = [x.strip() for x in scolumns]
 scolumns = [x for x in scolumns if x and not x.startswith('#')]
 
 for catalog in [x for x in next(os.walk('sexout'))[2] if x.endswith("txt")]:
     sample_dir = catalog.partition("-")
-    search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + 
-sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
+    search_dict[catalog] = "tricam/data/" + sample_dir[0] + "/obsdata/" + sample_dir[2].partition(".")[0].partition("-")[0] + ".lbl"
     ra, dec, radius = getConeParams(search_dict[catalog])
     print("RA: " + str(ra) + ", DEC:" + str(dec))
     cat_tab = ascii.read("sexout/"+catalog)
     cat_tab.sort("MAG_AUTO");
     #top_5p = float(np.percentile(cat_tab["MAG_AUTO"], 5))
-    sconstraints = {'primaryDetection':1,'rPSFMag.min':10, 'rPSFMag.max':25}
+    sconstraints = {'primaryDetection':1,'rApMag.min':15, 'rApMag.max':22}
     res = ps1cone(ra,dec,radius, table="stack", release="dr2", columns=scolumns, verbose=True, **sconstraints)
     res_tab = parseConeQuery(res)
     nl,semg = starMatcher(res_tab, cat_tab, 0.003, 1)
