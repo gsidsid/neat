@@ -239,7 +239,7 @@ def starMatcher(ps1_catalog, se_catalog, error_pos, error_mag):
     return near_list, se_mags
 
 search_dict = dict()
-scolumns = """raMean,decMean,gMeanApMag,rMeanApMag""".split(',')
+scolumns = """raMean,decMean,gMeanApMag,rMeanApMag,rMeanApMagErr,gMeanApMagErr""".split(',')
 scolumns = [x.strip() for x in scolumns]
 scolumns = [x for x in scolumns if x and not x.startswith('#')]
 
