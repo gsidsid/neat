@@ -36,7 +36,7 @@ for s in proc:
         sextractor_params +
         " && sex ../" +
         file +
-        " -PARAMETERS_NAME sex_outcols.txt -STARNNW_NAME default_nnw.txt -c wisesex_params.txt -SATUR_LEVEL 2500 -DETECT_THRESH 2 -GAIN 4.445378 -WEIGHT_GAIN N,N -CATALOG_NAME " +
+        " -PARAMETERS_NAME sex_outcols.txt -STARNNW_NAME default_nnw.txt -c wisesex_params.txt -DETECT_THRESH 2 -WEIGHT_GAIN N,N -CATALOG_NAME " +
         sample + '-' + light_id[:-5] +
         "-sex-cat.txt -DEBLEND_NTHRESH 32 -DEBLEND_MINCONT 0.0001 -BACK_SIZE 130")
 
