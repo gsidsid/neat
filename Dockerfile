@@ -21,8 +21,6 @@ WORKDIR "/opt/setup"
 RUN sudo apt-get install wget
 RUN wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz
 RUN tar -xvf cfitsio_latest.tar.gz
-# Looks like cfitsio 3.47 brought some changes to linking...
-RUN export LD_LIBRARY_PATH="/opt/setup/cfitsio-3.47/"
 RUN cd cfitsio-3.47 && sudo ./configure && sudo make && sudo make funpack && cp ./funpack ../../
 
 # Analysis tools
@@ -48,3 +46,5 @@ RUN chmod a+x NEAT_Catgen.sh
 RUN chmod 600 NEAT_Catgen.sh
 
 ADD . .
+# Looks like cfitsio 3.47 brought some changes to linking...
+RUN export LD_LIBRARY_PATH="/opt/setup/cfitsio-3.47/"
