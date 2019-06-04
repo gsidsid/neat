@@ -19,7 +19,7 @@ WORKDIR "/opt/setup"
 
 # Extraction tools
 RUN sudo apt-get install wget
-RUN wget ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3450.tar.gz
+RUN wget -m ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3450.tar.gz
 RUN mkdir cfitsio
 RUN tar -xvf cfitsio3450.tar.gz -C cfitsio --strip 1
 RUN cd cfitsio && sudo ./configure && sudo make && sudo make funpack && cp ./funpack ../../
