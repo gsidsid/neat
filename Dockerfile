@@ -23,6 +23,9 @@ RUN wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.g
 RUN tar -xvf cfitsio_latest.tar.gz
 RUN cd cfitsio-3.47 && sudo ./configure && sudo make && sudo make funpack && cp ./funpack ../../
 
+# Looks like cfitsio 3.47 brought some changes to linking...
+ENV LD_LIBRARY_PATH="/opt/setup/cfitsio-3.47/"
+
 # Analysis tools
 RUN git clone https://github.com/astropy/astropy
 RUN cd astropy && python setup.py install
@@ -46,5 +49,3 @@ RUN chmod a+x NEAT_Catgen.sh
 RUN chmod 600 NEAT_Catgen.sh
 
 ADD . .
-# Looks like cfitsio 3.47 brought some changes to linking...
-RUN export LD_LIBRARY_PATH="/opt/setup/cfitsio-3.47/"
