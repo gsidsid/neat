@@ -19,10 +19,11 @@ WORKDIR "/opt/setup"
 
 # Extraction tools
 RUN sudo apt-get install wget
-RUN wget --user=anonymous --password=no ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3450.tar.gz
-RUN mkdir cfitsio
-RUN tar -xvf cfitsio3450.tar.gz -C cfitsio --strip 1
-RUN cd cfitsio && sudo ./configure && sudo make && sudo make funpack && cp ./funpack ../../
+RUN wget http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz
+RUN tar -xvf cfitsio_latest.tar.gz
+# Looks like cfitsio 3.47 brought some changes to linking...
+RUN export LD_LIBRARY_PATH="/opt/setup/cfitsio-3.47/"
+RUN cd cfitsio-3.47 && sudo ./configure && sudo make && sudo make funpack && cp ./funpack ../../
 
 # Analysis tools
 RUN git clone https://github.com/astropy/astropy
