@@ -109,7 +109,7 @@ def preprocessSampleData(light_idx, FITSFiles, longid):
     dark = CCDData.read(FITSFiles['darks'][dark_idx], unit='adu')
     flat = CCDData.read(FITSFiles['flats'][flat_idx], unit='adu')
     
-    corr = flat.data - dark.data
+    corr = flat.data
     corr1 = light.data - dark.data
     light.data = corr1/corr
     flat_corrected = light
