@@ -26,4 +26,4 @@ python-debian==0.1.27
 python-systemd==231
 requests==2.19.1
 ubuntu-drivers-common==0.0.0
-urllib3==1.23
+urllib3==1.26.5
